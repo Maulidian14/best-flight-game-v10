@@ -37,9 +37,11 @@ export const ISLANDS = [
     beach: 0.55, rock: 0.9,
     color: 0x6fae5e, sand: 0xf2e2b0, rockColor: 0x9a8a72,
     beachStrip: { x: 1650, z: -1080, heading: 160, length: 300, width: 20 },
-    // Waits just off the strip's edge, 46 m past its centre by the palms,
-    // so a plane parked on the strip has her in frame ahead of it.
-    hiker: { x: 1686, z: -1112 },
+    // Waits just off the strip's edge, 126 m past its centre by the palms:
+    // the autopilot settles onto the sand and rolls out to ~+92 m past the
+    // centre, so she stands ~33 m ahead of the parked plane — inside the
+    // wide shot camera's view, beside the orange signal smoke.
+    hiker: { x: 1726, z: -1181 },
     label: 'TERN CAY — RESCUE BEACH',
   },
   {

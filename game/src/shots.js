@@ -82,10 +82,15 @@ export function setupShot(n, ctx) {
     // Start 400 m out: the approach is short on purpose — the shot's moment
     // is the pickup, ~13 s of game time in, and the headless harness only
     // waits 240 s of wall time while the game runs ~0.1x real time.
+    // Start 50 m above the beach (was 36): under swiftshader the
+    // autopilot's first descent porpoises, and its floor sat right on the
+    // rising ground (~19 m) 74 m short of the strip — two renders flew
+    // into the hillside there. +14 m lifts the whole descent clear of
+    // the terrain without changing the landing itself.
     const ex = beach.x - Math.sin(h) * 400;
     const ez = beach.z + Math.cos(h) * 400;
     const gy = groundHeight(beach.x, beach.z);
-    place(state, ex, gy + 36, ez, beach.heading, 38, 0.45);
+    place(state, ex, gy + 50, ez, beach.heading, 38, 0.45);
     state.gearDown = true;
     state.flaps = 1;
     autopilotLand(autopilot, beach);
@@ -100,7 +105,16 @@ export function setupShot(n, ctx) {
           const hp = ISLANDS[2].hiker;
           signalSmoke(P, hp.x, groundHeight(hp.x, hp.z) + 2, hp.z);
         }
-        return state.flightTime - pickupStart > 0.6;
+        // Fire 1.0 s into the pickup (was 0.6): the orange signal smoke
+        // needs the time to rise and spread into a visible column above
+        // the hiker, while staying well inside the headless harness's
+        // 240 s wall-time budget for this pose. The "Hiker boarding… 3s"
+        // banner is still up.
+        // AND the plane must be (nearly) stopped: on a fast approach the
+        // wheels can graze rising ground before the strip, which trips
+        // the pickup phase while the plane is still flying at 40+ m/s —
+        // firing then catches a flyby, not the parked pickup moment.
+        return state.flightTime - pickupStart > 1.0 && state.speed < 5;
       }
       return false;
     };
